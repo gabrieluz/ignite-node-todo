@@ -33,7 +33,7 @@ function checksExistsUserAccount(request, response, next) {
 }
 
 app.post('/users', (request, response) => {
-  const { user, username } = request.body
+  const { name, username } = request.body
 
   const userExists = users.find(user => user.username == username)
 
@@ -41,17 +41,17 @@ app.post('/users', (request, response) => {
     return response.status(400).json({ error: `Username ${username} already exists! 🤡` })
   }
 
-  const newUser = {
+  const user = {
     id: uuidv4(),
-    user,
+    name,
     username,
     todos: []
   }
 
-  users.push(newUser)
+  users.push(user)
 
   // response.send(`Created your user , welcome ${username} 😉`)
-  return response.status(201).json(newUser)
+  return response.status(201).json(user)
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
@@ -85,7 +85,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   const todo = user.todos.find((user) => user.id === id)
 
   if (!todo) {
-    return response.status(404).json({ erro: `Invalidate id ${id}, not found` })
+    return response.status(404).json({ error: `Invalidate id ${id}, not found` })
   }
 
   todo.title = title
@@ -101,7 +101,7 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
   const todo = user.todos.find((user) => user.id === id)
 
   if (!todo) {
-    return response.status(404).json({ erro: `Invalidate id ${id}, not found` })
+    return response.status(404).json({ error: `Invalidate id ${id}, not found` })
   }
   // updateTodo[0].done = !updateTodo[0].done
   todo.done = true
@@ -113,13 +113,13 @@ app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
   const { user } = request
   const { id } = request.params
 
-  const todoIndex = user.todos.findIndex((todo) => todo.id === id)
+  const todo = user.todos.findIndex((todo) => todo.id === id)
 
-  if (todoIndex === -1) {
-    return response.status(404).json({ erro: `Not found` })
+  if (todo === -1) {
+    return response.status(404).json({ error: `Not found` })
   }
 
-  user.todos.splice(todoIndex, 1)
+  user.todos.splice(todo, 1)
 
   return response.status(204).json()
 });
