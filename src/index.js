@@ -1,6 +1,6 @@
-import express from 'express';
-import { v4 as uuidv4 } from 'uuid';
-import cors from 'cors'
+const express = require('express');
+const { v4: uuidv4 } = require('uuid');
+const cors = require('cors')
 
 const app = express();
 
@@ -124,4 +124,4 @@ app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
   return response.status(204).json()
 });
 
-export default app;
+module.exports = app;
